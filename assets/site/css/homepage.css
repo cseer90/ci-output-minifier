@@ -1,0 +1,31 @@
+.main_menu
+{
+ margin-bottom:10px;
+}
+.main_menu>a
+{
+ padding:5px 10px;
+ color:#222222;
+ font-weight:bold;
+ border-bottom:3px solid #555555;
+ font-size:120%;
+ text-decoration:none;
+ transition:all .2s ease-out;
+}
+.main_menu>a:not(:first-child)
+{
+ margin-left:8px;
+}
+.main_menu>a:hover
+{
+ border-color:red;
+ color:red;
+}
+.main_menu>a.active
+{
+ border-color:red;
+}
+.summary>.tab>button
+{
+ margin:0 5px 10px 0;
+}

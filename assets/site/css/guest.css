@@ -1,0 +1,235 @@
+.body_wrapper
+{
+ margin-top:10px;
+ margin-bottom:10px;
+ padding:0 !important;
+}
+.listing
+{
+}
+.listing .heading
+{
+ vertical-align:middle;
+}
+.listing .heading .category
+{
+ margin:0;
+ margin-bottom:10px;
+}
+.listing .heading>.play_all
+{
+ padding:5px 10px;
+ border:1px solid #c3c3c3;
+ font-size:120%;
+ background:#555555;
+ color:#fff;
+ transition:all .2s ease-out;
+ cursor:pointer;
+}
+.listing .heading .play_all:hover
+{
+ background:#c3c3c3;
+ color:#222222;
+}
+.listing .heading .play_all>span.glyphicon
+{
+ margin-right:10px;
+}
+.player
+{
+ position:fixed;
+ bottom:0;
+ left:0;
+ background:rgba(45, 42, 42, .7);
+ z-index:50;
+ width:100%;
+ font-size:250%;
+}
+.player .btns
+{
+ background:#222222;
+ color:#999999;
+ font-size:110%;
+ cursor:pointer;
+ vertical-align:middle;
+}
+.player .btns>.disabled
+{
+ color:#666666 !important;
+}
+.player .btns .play_current
+{/* 
+ padding:10px; */
+ text-align:center;
+ font-size:140%;
+}
+.player .track_base_wrapper
+{
+ position:relative;
+ padding:5px;
+}
+.player .track_base_wrapper>.info>div
+{
+ padding:0;
+}
+#current_track
+{
+ color:#fff;
+ font-size:70%;
+ margin-bottom:10px;
+}
+.player .track_base .progress_wrapper
+{
+ position:relative;
+ background:#000;
+ min-height:5px;
+ width:100%;
+}
+.player .track_base .progress_wrapper .track_progress
+{
+ position:absolute;
+ left:0;
+ width:0%;
+ background:#c3c3c3;
+ min-height:5px;
+}
+.player .track_base .progress_wrapper .track_pointer
+{
+ position:absolute;
+ left:0px;
+ top:-8px;
+ min-height:20px;
+ min-width:20px;
+ border-radius:50%;
+ background:#fff;
+ z-index:10;
+ cursor:pointer;
+ transition:all .2s ease-out;
+}
+.player .track_base .progress_wrapper .track_pointer:hover
+{
+ background:#e9e9e9;
+}
+.volume_wrapper
+{
+ display:inline-block;
+ padding:0px 5px;
+ font-size:150%;
+ position:relative;
+ vertical-align:top;
+ transition:all .2s ease-out;
+}
+.volume_wrapper>.volume_level_wrapper
+{
+ position:absolute;
+ top:0px;
+ left:35%;
+ display:none;
+}
+.volume_wrapper>.volume_icon
+{
+ padding:15px 5px;
+}
+.volume_wrapper:hover
+{
+ background:#222222;
+ color:#c3c3c3;
+}
+.volume_wrapper:hover .volume_level_wrapper
+{
+ display:block;
+}
+#volume_level
+{
+ vertical-align:middle;
+ position:relative;
+}
+#volume_level>.fullbar,#volume_level>.activebar
+{
+ position:absolute;
+ left:0;
+ bottom:0;
+ background:#555555;
+ min-height:100px;
+ min-width:12px;
+}
+#volume_level>.activebar
+{
+ min-height:1px;
+ background:red;
+ height:100%;
+ z-index:10;
+}
+#volume_level>.pointer
+{
+ position:absolute;
+ left:-5px;
+ bottom:0px;
+ min-height:20px;
+ min-width:20px;
+ border-radius:10px;
+ background:#D65353;
+ border:1px solid #e9e9e9;
+ z-index:12;
+}
+
+.ad
+{
+ position:relative;
+ min-height:450px;
+ border:1px solid #c3c3c3;
+}
+.ad:before
+{
+ content:'Adverstisement';
+ position:absolute;
+ right:0;
+ top:0;
+ background:rgba(255,255,255,0.6);
+ color:#000;
+ font-size:12px;
+ padding:4px;
+}
+.list
+{
+ background:#d3d3d3;
+}
+.list>tbody>tr>th
+{
+ font-size:120%;
+ font-weight:bold;
+}
+.list>tbody>tr>td
+{
+ font-size:110%;
+}
+.one_nauha>.quick_play>.play_btn
+{
+ border-radius:50%;
+ min-height:30px;
+ padding:5px;
+ border:2px solid transparent;
+ transition:all .2s ease-out;
+ cursor:pointer;
+}
+.one_nauha>.quick_play>.playing
+{
+ background:#c3c3c3;
+ border-color:#222222;
+}
+.one_nauha>.quick_play>.play_btn:hover
+{
+ background:#c3c3c3;
+ border-color:#222222;
+}
+.one_nauha>.popularity>.one_bar
+{
+ display:inline-block;
+ min-width:5px;
+ min-height:15px;
+ background:#c3c3c3;
+}
+.one_nauha>.popularity>.one_bar.active
+{
+ background:#222222;
+}
