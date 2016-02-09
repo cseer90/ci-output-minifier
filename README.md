@@ -7,27 +7,27 @@ Please ensure that your 'cached' directory has enough permissions for the hook t
 #How does it work?
 Download and unzip the package. Copy 'resource.php' from application/hooks and copy it under the same path (ie, application/hooks) in your project.
 In your config/hooks.php, add the following towards the bottom of the file:<br>
-<code>
+<code><pre>
 $hook['pre_controller'][] = array(
     'class'     => 'Resource',
     'function'  => 'init',
     'filename'  => 'resource.php',
     'filepath'  => 'hooks'
-);\n
+);
 $hook['display_override'][] = array(
     'class'     => 'Resource',
     'function'  => 'renderHTML',
     'filename'  => 'resource.php',
     'filepath'  => 'hooks'
-);
+);</pre>
 </code>
-Now, if you want any css/js to be minified, include it within your template in following manner:
-
-\<link rel="text/stylesheet" href="<?php echo Resource::css('assets/css/index.css')?>" /><br>
-\<link rel="text/stylesheet" href="<?php echo Resource::css('assets/css/guest.css')?>" /><br>
-\<script rel="text/javascript" href="<?php echo Resource::js('assets/js/jquery1.10.2.min.js')?>">\</script><br>
-\<script rel="text/javascript" href="<?php echo Resource::js('assets/js/index.js')?>">\</script><br>
-
+Now, if you want any css/js to be minified, include it within your template in following manner:<br>
+<code><pre>
+\<link rel="text/stylesheet" href="<?php echo Resource::css('assets/css/index.css')?>" />
+\<link rel="text/stylesheet" href="<?php echo Resource::css('assets/css/guest.css')?>" />
+\<script rel="text/javascript" href="<?php echo Resource::js('assets/js/jquery1.10.2.min.js')?>">\</script>
+\<script rel="text/javascript" href="<?php echo Resource::js('assets/js/index.js')?>">\</script></pre>
+</code>
 This would create two files, one under js and other under css in name of index.guest.min.css and jquery1.10.2.index.min.js. These files will be created on only first time load of the page. On further requests, it would simply load that file.
 Also note that if any of the included css/js files are modified, the minified js/css will be auto updated.
 #Note
