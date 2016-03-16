@@ -55,10 +55,10 @@ class Resource
 
         $xpath = new DOMXPath($dom);
         $scripts = $xpath->query('//script');
+
+        $filename = '';
         if($scripts->length>0)
         {
-            $filename = '';
-            $found = false;
             $last_mtime = 0;
             foreach($scripts as $script)
             {
@@ -71,7 +71,6 @@ class Resource
                     $last_mtime = $file_mtime ?($file_mtime>$last_mtime ?$file_mtime :$last_mtime) :$last_mtime;
                     if($src && in_array($src,self::$js))
                     {
-                        $found = true;
                         $script->parentNode->removeChild($script);
                         $src = explode('.',basename($src));
                         array_pop($src);
@@ -81,10 +80,10 @@ class Resource
                 }
             }
             $filename = trim(str_replace('.min','',$filename),'.');
-            @mkdir(FCPATH."assets/cached/js/",0777, true);
-            $filename = FCPATH."assets/cached/js/$filename.min.js";
-            if($found)
+            if($filename!='')
             {
+                @mkdir(FCPATH."assets/cache/js/",0777, true);
+                $filename = FCPATH."assets/cache/js/$filename.min.js";
                 $file_mtime = file_exists($filename) ?filemtime($filename) :0;
                 if($file_mtime <$last_mtime)
                 {
@@ -103,10 +102,9 @@ class Resource
         }
 
         $stylesheets = $xpath->query('//link');
+        $filename = '';
         if($stylesheets->length>0)
         {
-            $filename = '';
-            $found = false;
             $last_mtime = 0;
             foreach($stylesheets as $css)
             {
@@ -118,7 +116,6 @@ class Resource
                     $last_mtime = $file_mtime ?($file_mtime>$last_mtime ?$file_mtime :$last_mtime) :$last_mtime;
                     if($src && in_array($src,self::$css))
                     {
-                        $found = true;
                         $css->parentNode->removeChild($css);
                         $src = explode('.',basename($src));
                         array_pop($src);
@@ -128,16 +125,18 @@ class Resource
                 }
             }
             $filename = trim(str_replace('.min','',$filename),'.');
-            @mkdir(FCPATH."assets/cached/css/",0777, true);
-            $filename = FCPATH."assets/cached/css/$filename.min.css";
-            if($found)
+            if($filename!='')
             {
+                @mkdir(FCPATH."assets/cache/css/",0777, true);
+                $filename = FCPATH."assets/cache/css/$filename.min.css";
                 $file_mtime = file_exists($filename) ?filemtime($filename) :0;
                 if($file_mtime <$last_mtime)
                 {
                     $content = '';
                     foreach(self::$css as $script)
                     {
+                        $script = FCPATH.$script;
+                        echo '<br>Processing script:'.$script;
                         $min_css = trim(file_get_contents($script));
                         $min_css = self::getCompressedCSS($min_css, $script);
                         $content .= $min_css."\n\r";
@@ -164,17 +163,47 @@ class Resource
         if(trim($input) === "") return $input;
         $files = [];
         preg_match_all('/(?:\.\.\/)+(.*?\))/', $input, $files);
-        $files = $files[0];
-        $cache_path = FCPATH.'assets/cached/';
-        $orig_path = str_replace(basename($orig_file),'',$orig_file);
-        for($i=0; $i<count($files); $i++)
+        $files = count($files)>0 ?$files[0] :null;
+        if($files)
         {
-            $files[$i] = str_replace(')','',$files[$i]);
-            $temp = explode('../',$files[$i]);
-            $new_file_path = array_pop($temp);
-            $dir = str_replace(basename($new_file_path),'',$new_file_path);
-            @mkdir($cache_path.$dir,0777,true);
-            @copy($orig_path.$files[$i],$cache_path.$new_file_path);
+            $cache_path = FCPATH.'assets/cache/';
+            if(!is_dir($cache_path))
+                @mkdir($cache_path,0777,true);
+            $orig_path = dirname($orig_file);
+
+            chdir($orig_path);
+            foreach($files as $file)
+            {
+                echo '<br>Actual file:'.$file;
+                $file = str_replace(')','',$file);
+                $file = explode('#',$file)[0];//remove version info from filename
+                $file = explode('?',$file)[0];//remove version info from filename
+                $file = trim($file,"'");
+                $file = trim($file,'"');
+
+                $source = realpath($file);
+                $dest = $cache_path.'css/'.$file;
+                $dir = dirname($dest);
+                try
+                {
+                    if(!is_dir($dir))
+                        mkdir($dir,0777,true);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+                try
+                {
+                    if(!file_exists($dest) && !copy($source, $dest))
+                        echo '<br>Error in copying file:'.error_get_last();
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
+            chdir(__dir__);
         }
         return preg_replace(
             array(
