@@ -109,7 +109,8 @@ class Resource
             foreach($stylesheets as $css)
             {
                 $src = $css->getAttribute('href');
-                if(self::isLocalPath($src))
+                $rel = strtolower($css->getAttribute('rel'));
+                if(self::isLocalPath($src) && $rel=='stylesheet')
                 {
                     $src = str_replace(base_url('/'),'',$src);
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
