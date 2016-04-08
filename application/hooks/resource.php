@@ -48,6 +48,7 @@ class Resource
 
     public function renderHTML()
     {
+        date_default_timezone_set('Asia/Calcutta');
         $ci = &get_instance();
         $output = $ci->output->get_output();
         $dom = new DOMDocument;
@@ -85,13 +86,14 @@ class Resource
                 }
             }
             $filename = trim(str_replace('.min','',$filename),'.');
-            $filename = preg_replace('/[^a-zA-Z0-9-]+/','',$filename).'-v'.date('Ymd');
+            $filename = preg_replace('/[^a-zA-Z0-9-]+/','',$filename);
             if($filename!='')
             {
                 @mkdir(FCPATH."assets/cache/js/",0777, true);
-                $filename = FCPATH."assets/cache/js/$filename.min.js";
+                $version = '-v'.date('Ymd');
+                $filename = FCPATH."assets/cache/js/$filename$version.min.js";
                 $file_mtime = file_exists($filename) ?filemtime($filename) :0;
-                if($file_mtime <$last_mtime)
+                if($file_mtime < $last_mtime)
                 {
                     $content = '';
                     foreach(self::$js as $script)
@@ -120,7 +122,8 @@ class Resource
                 {
                     $src = str_replace(base_url('/'),'',$src);
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
-                    $last_mtime = $file_mtime ?($file_mtime>$last_mtime ?$file_mtime :$last_mtime) :$last_mtime;
+                    //echo "<br>Filename: $src<br>mTime: ".date('Y-m-d H:i:s',$file_mtime)."<br>Last:".date('Y-m-d H:i:s',$last_mtime);
+                    $last_mtime = $file_mtime>$last_mtime ?$file_mtime :$last_mtime;
                     if($src && in_array($src,self::$css))
                     {
                         $css->parentNode->removeChild($css);
@@ -135,14 +138,17 @@ class Resource
                     }
                 }
             }
+            //echo ('<br>Largest:'.$last_mtime);
             $filename = trim(str_replace('.min','',$filename),'.');
-            $filename = preg_replace('/[^a-zA-Z0-9-]+/','',$filename).'-v'.date('Ymd');
+            $filename = preg_replace('/[^a-zA-Z0-9-]+/','',$filename);
             if($filename!='')
             {
                 @mkdir(FCPATH."assets/cache/css/",0777, true);
-                $filename = FCPATH."assets/cache/css/$filename.min.css";
+                $version = '-v'.date('Ymd');
+                $filename = FCPATH."assets/cache/css/$filename$version.min.css";
                 $file_mtime = file_exists($filename) ?filemtime($filename) :0;
-                if($file_mtime <$last_mtime)
+                //die('<br>mTime:'.$file_mtime.'  '.$filename.' '.$last_mtime);
+                if($file_mtime < $last_mtime)
                 {
                     $content = '';
                     foreach(self::$css as $script)
