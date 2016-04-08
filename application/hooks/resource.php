@@ -60,6 +60,7 @@ class Resource
         if($scripts->length>0)
         {
             $last_mtime = 0;
+            $parent = $scripts->item(0)->parentNode;
             foreach($scripts as $script)
             {
                 $src = $script->getAttribute('src');
@@ -75,11 +76,16 @@ class Resource
                         $src = explode('.',basename($src));
                         array_pop($src);
                         $src = join('.',$src);
-                        $filename .= '.'.$src;
+                        //$src = preg_replace('/^\d/','', $src);
+                        $src = str_replace('.min','',$src);
+                        $src = trim($src,'.');
+                        //$filename .= '.'.$src;
+                        $filename .= $src & 'random';//bitwise AND
                     }
                 }
             }
             $filename = trim(str_replace('.min','',$filename),'.');
+            $filename = preg_replace('/[^a-zA-Z0-9-]+/','',$filename).'-v'.date('Ymd');
             if($filename!='')
             {
                 @mkdir(FCPATH."assets/cache/js/",0777, true);
@@ -97,7 +103,7 @@ class Resource
                 $script = $dom->createElement('script');
                 $script->setAttribute('type','text/javascript');
                 $script->setAttribute('src',str_replace(FCPATH,base_url('/'),$filename));
-                $scripts->item(0)->parentNode->appendChild($script);
+                $parent->appendChild($script);
             }
         }
 
@@ -121,11 +127,16 @@ class Resource
                         $src = explode('.',basename($src));
                         array_pop($src);
                         $src = join('.',$src);
-                        $filename .= '.'.$src;
+                        //$src = preg_replace('/^\d/','', $src);
+                        $src = str_replace('.min','',$src);
+                        $src = trim($src,'.');
+                        //$filename .= '.'.$src;
+                        $filename .= $src & 'random';//bitwise AND
                     }
                 }
             }
             $filename = trim(str_replace('.min','',$filename),'.');
+            $filename = preg_replace('/[^a-zA-Z0-9-]+/','',$filename).'-v'.date('Ymd');
             if($filename!='')
             {
                 @mkdir(FCPATH."assets/cache/css/",0777, true);
@@ -137,7 +148,6 @@ class Resource
                     foreach(self::$css as $script)
                     {
                         $script = FCPATH.$script;
-                        echo '<br>Processing script:'.$script;
                         $min_css = trim(file_get_contents($script));
                         $min_css = self::getCompressedCSS($min_css, $script);
                         $content .= $min_css."\n\r";
@@ -175,7 +185,6 @@ class Resource
             chdir($orig_path);
             foreach($files as $file)
             {
-                echo '<br>Actual file:'.$file;
                 $file = str_replace(')','',$file);
                 $file = explode('#',$file)[0];//remove version info from filename
                 $file = explode('?',$file)[0];//remove version info from filename
