@@ -163,7 +163,7 @@ class Resource
                 $path = str_replace(FCPATH,base_url('/'),$filename);
                 $script = $dom->createElement('link');
                 $script->setAttribute('rel','stylesheet');
-                $script->setAttribute('type','text/stylesheet');
+                $script->setAttribute('type','text/css');
                 $script->setAttribute('href',$path);
                 $xpath->query('//head')->item(0)->appendChild($script);
             }
