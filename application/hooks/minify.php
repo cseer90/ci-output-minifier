@@ -73,7 +73,7 @@ class Minify
                 if(self::isLocalPath($src))
                 {
                     $src = ltrim($src, base_url('/'));
-                    if($this->auto_pick && !in_array($src,self::$js))
+                    if($src && $this->auto_pick && !in_array($src,self::$js))
                         array_push(self::$js, $src);
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
                     $last_mtime = $file_mtime ?($file_mtime>$last_mtime ?$file_mtime :$last_mtime) :$last_mtime;
@@ -105,7 +105,7 @@ class Minify
                     $content = '';
                     foreach(self::$js as $script)
                     {
-                        $content .= trim(file_get_contents($script))."\n\r";
+                        $content .= trim(file_get_contents(FCPATH.$script))."\n\r";
                     }
                     file_put_contents($filename,self::getCompressedJS($content));
                 }
@@ -128,7 +128,7 @@ class Minify
                 if(self::isLocalPath($src) && $rel=='stylesheet')
                 {
                     $src = ltrim($src, base_url('/'));
-                    if($this->auto_pick && !in_array($src,self::$css))
+                    if($src && $this->auto_pick && !in_array($src,self::$css))
                         array_push(self::$css, $src);
 
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
