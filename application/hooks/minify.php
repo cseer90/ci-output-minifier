@@ -62,6 +62,7 @@ class Minify
         $scripts = $xpath->query('//script');
 
         $filename = '';
+        $domain = base_url();
         if($scripts->length>0)
         {
             $last_mtime = 0;
@@ -70,14 +71,15 @@ class Minify
             {
                 $src = $script->getAttribute('src');
 //                echo '<br>processing:'.$src;
-                if(self::isLocalPath($src))
+                if($src && self::isLocalPath($src))
                 {
-                    $src = ltrim($src, base_url('/'));
-                    if($src && $this->auto_pick && !in_array($src,self::$js))
+                    $src = preg_replace("~^$domain~",'',$src);
+                    //trim($src, base_url('/'));
+                    if($this->auto_pick && !in_array($src,self::$js))
                         array_push(self::$js, $src);
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
                     $last_mtime = $file_mtime ?($file_mtime>$last_mtime ?$file_mtime :$last_mtime) :$last_mtime;
-                    if($src && ($this->auto_pick || in_array($src,self::$js)))
+                    if($src && in_array($src,self::$js))
                     {
                         //remove this node from dom
                         $script->parentNode->removeChild($script);
@@ -127,7 +129,7 @@ class Minify
                 $rel = strtolower($css->getAttribute('rel'));
                 if(self::isLocalPath($src) && $rel=='stylesheet')
                 {
-                    $src = ltrim($src, base_url('/'));
+                    $src = preg_replace("~^$domain~",'',$src);
                     if($src && $this->auto_pick && !in_array($src,self::$css))
                         array_push(self::$css, $src);
 
