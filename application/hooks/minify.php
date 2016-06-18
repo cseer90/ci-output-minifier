@@ -16,8 +16,8 @@ class Minify
         self::$css = [];
         self::$js = [];
         $ci = &get_instance();
-        $config = $ci->config->item('minify_auto');
-        $this->auto_pick = $config===null ?true :$config;
+        $auto_pick = $ci->config->item('minify_auto');
+        $this->auto_pick = $auto_pick===null ?true :$this->auto_pick;
     }
     public static function storeInList($filename, $type)
     {
@@ -72,14 +72,17 @@ class Minify
 //                echo '<br>processing:'.$src;
                 if(self::isLocalPath($src))
                 {
-                    $src = str_replace(base_url('/'),'',$src);
+                    $src = ltrim($src, base_url('/'));
+                    if($this->auto_pick && !in_array($src,self::$js))
+                        array_push(self::$js, $src);
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
                     $last_mtime = $file_mtime ?($file_mtime>$last_mtime ?$file_mtime :$last_mtime) :$last_mtime;
                     if($src && ($this->auto_pick || in_array($src,self::$js)))
                     {
+                        //remove this node from dom
                         $script->parentNode->removeChild($script);
                         $src = explode('.',basename($src));
-                        array_pop($src);
+                        array_pop($src);//remove extension
                         $src = join('.',$src);
                         //$src = preg_replace('/^\d/','', $src);
                         $src = str_replace('.min','',$src);
@@ -125,10 +128,13 @@ class Minify
                 if(self::isLocalPath($src) && $rel=='stylesheet')
                 {
                     $src = ltrim($src, base_url('/'));
+                    if($this->auto_pick && !in_array($src,self::$css))
+                        array_push(self::$css, $src);
+
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
                     //echo "<br>Filename: $src<br>mTime: ".date('Y-m-d H:i:s',$file_mtime)."<br>Last:".date('Y-m-d H:i:s',$last_mtime);
                     $last_mtime = $file_mtime>$last_mtime ?$file_mtime :$last_mtime;
-                    if($src && ($this->auto_pick  || in_array($src,self::$css)))
+                    if($src && in_array($src,self::$css))
                     {
                         $css->parentNode->removeChild($css);
                         $src = explode('.',basename($src));
@@ -139,6 +145,7 @@ class Minify
                         $src = trim($src,'.');
                         //$filename .= '.'.$src;
                         $filename .= $src & 'random';//bitwise AND
+                        //echo '<br>Source:'.$filename;
                     }
                 }
             }
