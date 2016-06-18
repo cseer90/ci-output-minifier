@@ -12,20 +12,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 $hook['pre_controller'][] = array(
-    'class'     => 'Router',
+    'class'     => 'Minify',
     'function'  => 'setDefaults',
-    'filename'  => 'router.php',
+    'filename'  => 'minify.php',
     'filepath'  => 'hooks'
 );
 $hook['pre_controller'][] = array(
-    'class'     => 'Resource',
+    'class'     => 'Minify',
     'function'  => 'init',
-    'filename'  => 'resource.php',
+    'filename'  => 'minify.php',
     'filepath'  => 'hooks'
 );
 $hook['display_override'][] = array(
-    'class'     => 'Resource',
+    'class'     => 'Minify',
     'function'  => 'renderHTML',
-    'filename'  => 'resource.php',
+    'filename'  => 'minify.php',
     'filepath'  => 'hooks'
 );

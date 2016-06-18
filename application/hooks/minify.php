@@ -6,14 +6,18 @@
  * Time: 08:20
  * Download YUI compressor from: https://github.com/yui/yuicompressor/releases
  */
-class Resource
+class Minify
 {
     static private $css;
     static private $js;
+    var $auto_pick;
     public function init()
     {
         self::$css = [];
         self::$js = [];
+        $ci = &get_instance();
+        $config = $ci->config->item('minify_auto');
+        $this->auto_pick = $config===null ?true :$config;
     }
     public static function storeInList($filename, $type)
     {
@@ -71,7 +75,7 @@ class Resource
                     $src = str_replace(base_url('/'),'',$src);
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
                     $last_mtime = $file_mtime ?($file_mtime>$last_mtime ?$file_mtime :$last_mtime) :$last_mtime;
-                    if($src && in_array($src,self::$js))
+                    if($src && ($this->auto_pick || in_array($src,self::$js)))
                     {
                         $script->parentNode->removeChild($script);
                         $src = explode('.',basename($src));
@@ -120,11 +124,11 @@ class Resource
                 $rel = strtolower($css->getAttribute('rel'));
                 if(self::isLocalPath($src) && $rel=='stylesheet')
                 {
-                    $src = str_replace(base_url('/'),'',$src);
+                    $src = ltrim($src, base_url('/'));
                     $file_mtime = $src ?filemtime(FCPATH.$src) :0;
                     //echo "<br>Filename: $src<br>mTime: ".date('Y-m-d H:i:s',$file_mtime)."<br>Last:".date('Y-m-d H:i:s',$last_mtime);
                     $last_mtime = $file_mtime>$last_mtime ?$file_mtime :$last_mtime;
-                    if($src && in_array($src,self::$css))
+                    if($src && ($this->auto_pick  || in_array($src,self::$css)))
                     {
                         $css->parentNode->removeChild($css);
                         $src = explode('.',basename($src));
@@ -342,4 +346,8 @@ class Resource
         $temp = parse_url($path);
         return empty($temp['host']);
     }
+}
+
+class Resource extends Minify{
+
 }

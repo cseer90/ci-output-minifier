@@ -29,7 +29,7 @@ $config['base_url'] = '';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -358,9 +358,11 @@ $config['encryption_key'] = 's2r343o34m5e34R6e76a343l45654ly655L76o3453n234g345N
 | except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
 */
-$config['sess_driver'] = 'files';
+$config['sess_use_database'] = TRUE;
+$config['sess_table_name'] = 'ci_sessions';
+$config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 7200;
+$config['sess_expiration'] = 3600*24*7;//one week
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
@@ -456,7 +458,7 @@ $config['csrf_exclude_uris'] = array();
 | by the output class.  Do not 'echo' any values with compression enabled.
 |
 */
-$config['compress_output'] = true;
+$config['compress_output'] = false;
 
 /*
 |--------------------------------------------------------------------------
@@ -505,6 +507,12 @@ $config['proxy_ips'] = '';
 $config['sess_use_database'] = TRUE;//saves session data into database
 $config['sess_table_name'] = 'ci_sessions';//session table name
 
+$config['minify_auto'] = true;
+
 $config['modules_locations'] = array(
     APPPATH.'modules/' => '../modules/',
 );
+
+$livesite = ENVIRONMENT=='production';
+defined('livesite') || define('livesite', $livesite);
+defined('LIVESITE') || define('LIVESITE', $livesite);
