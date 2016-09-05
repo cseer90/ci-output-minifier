@@ -16,7 +16,8 @@ class Minify
         self::$css = [];
         self::$js = [];
         $ci = &get_instance();
-        $auto_pick = $ci->config->item('minify_auto');
+        $config = empty($ci->config->config) ?[] :$ci->config->config;
+        $auto_pick = empty($config['minify_auto']) ?true :(bool)$config['minify_auto'];
         $this->auto_pick = $auto_pick===null ?true :$this->auto_pick;
     }
     public static function storeInList($filename, $type)
@@ -194,7 +195,7 @@ class Minify
         $files = [];
         preg_match_all('/(?:\.\.\/)+(.*?\))/', $input, $files);
         $files = count($files)>0 ?$files[0] :null;
-        if($files)
+        if(!empty($files))
         {
             $cache_path = FCPATH.'assets/cache/';
             if(!is_dir($cache_path))
